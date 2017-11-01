@@ -22,6 +22,7 @@ class App extends Component {
     if (this.state.scrn==1 && (this.state.phoneNum && this.state.longitude || 1==1)){
       this.state.longitude=34.771808899999996;/* for debugging on emulator */
       this.state.latitude=32.0754459;/* for debugging on emulator */
+      this.state.phoneNum="323456";
       return(
         <Board myData={{phoneNum:this.state.phoneNum,longitude:this.state.longitude,latitude:this.state.latitude}}/>
       )
