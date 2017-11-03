@@ -69,9 +69,12 @@ class Board extends Component {
     addNewEvent(){
       Alert.alert (this.state.longitude+" *** "+this.state.latitude+" *** "+this.state.phoneNum+" *** "+this.state.eventTxt);
       axios.get("https://neighberboards.appspot.com/insertData?longitude="+this.state.longitude+"&latitude="+this.state.latitude+"&tel="+this.state.phoneNum+"&info="+this.state.eventTxt)
-        .then(this.setState({iState:1}));
+        .then(this.reloadBoard());
     }
-
+    reloadBoard(){
+      this.state.iState=1;
+      this.componentWillMount();
+    }
 }
 
 const styles = {
