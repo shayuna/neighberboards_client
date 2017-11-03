@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import {ScrollView,Text,View,Alert,TextInput} from "react-native";
 import axios from "axios";
 import MySmallBtn from "./MySmallBtn";
-
+import SendSMS from 'react-native-sms';
 
 class Board extends Component {
   state={
@@ -64,7 +64,14 @@ class Board extends Component {
 
     }
     sendMsg(tel){
-      Alert.alert("sending msg to tel number - "+tel);
+      SendSMS.send({
+      body: 'מה ההודעה ?',
+      recipients: [tel],
+      successTypes: ['sent', 'queued']
+      }, (completed, cancelled, error) => {
+        console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+      });
+      Alert.alert("with sendmsg. tel - "+tel);
     }
     addNewEvent(){
       Alert.alert (this.state.longitude+" *** "+this.state.latitude+" *** "+this.state.phoneNum+" *** "+this.state.eventTxt);
