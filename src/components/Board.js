@@ -1,9 +1,12 @@
 import React,{Component} from "react";
-import {ScrollView,Text,View,Alert,TextInput} from "react-native";
+import {ScrollView,Text,View,Alert,TextInput,Image,Dimensions} from "react-native";
 import axios from "axios";
 import MySmallBtn from "./MySmallBtn";
 import SendSMS from 'react-native-sms';
+import PhotosInterface from "./PhotosInterface";
+import MyAdjustableButton from "./MyAdjustableButton";
 
+const { width } = Dimensions.get('window')
 class Board extends Component {
   state={
        iState:1,
@@ -11,7 +14,10 @@ class Board extends Component {
        longitude:"",
        latitude:"",
        eventTxt:"",
-       jList:[]
+       selectedImage:"",
+       jList:[],
+       iMode:0,
+       oSelectedImgSrc:{}
      }
      constructor(props){
       super();
@@ -35,10 +41,30 @@ class Board extends Component {
         )
       }
       else{
+        var oTextInputStyle,oPhotosInterfaceStyle;
+        if (this.state.iMode==0){
+          oTextInputShowState={width:"auto",height:"auto"};
+          oSelectedImageContainerState={width:"auto",height:"auto"};
+          oPhotosInterfaceShowState={width:0,height:0};
+        }
+        else{
+          oTextInputShowState={width:0,height:0};
+          oSelectedImageContainerState={width:0,height:0};
+          oPhotosInterfaceShowState={width:"auto",height:"auto"};
+        }
         return(
           <View style={styles.addEventScrnStyle}>
-            <TextInput style={styles.textInputStyle} multiline={true} onChangeText={txt=>this.state.eventTxt=txt}/>
-            <MySmallBtn title="שליחת הודעה" pressMe={()=>this.addNewEvent()}/>
+            <TextInput style={[styles.textInputStyle,oTextInputShowState]} multiline={true} onChangeText={txt=>this.state.eventTxt=txt}/>
+            <PhotosInterface style={styles.photosInterfaceStyle,oPhotosInterfaceShowState} iMode={this.state.iMode} cancelMe={()=>this.hidePhotosComponents()} selectPhoto={(sImgUri)=>this.selectPhoto(sImgUri)}/>
+            <View style={[oSelectedImageContainerState]}>
+              <Image source={this.state.oSelectedImgSrc} style={{width:width/3,height:width/3,margin:1}}/>
+            </View>
+            <View style={styles.btnsWrapperStyle}>
+              <MyAdjustableButton caption="גלריה" pressMe={()=>this.setState({iMode:1})}/>
+              <MyAdjustableButton caption="מצלמה" pressMe={()=>this.setState({iMode:2})}/>
+              <MyAdjustableButton caption="שליחת הודעה" pressMe={()=>this.addNewEvent()}/>
+              <MyAdjustableButton caption="חזרה לפיד" pressMe={()=>this.reloadBoard()}/>
+            </View>
           </View>
         )
       }
@@ -82,6 +108,13 @@ class Board extends Component {
       this.state.iState=1;
       this.componentWillMount();
     }
+    hidePhotosComponents(){
+      this.setState({iMode:0});
+    }
+    selectPhoto(sImgUri){
+      console.log ("imgUri - "+sImgUri);
+      this.setState({oSelectedImgSrc:{uri:sImgUri},iMode:0});
+    }
 }
 
 const styles = {
@@ -94,21 +127,27 @@ const styles = {
     fontSize:20
   },
   textInputStyle:{
-    flex:1,
     borderWidth:1,
     borderColor:"#ddd",
     textAlignVertical:"top"
   },
+  photosInterfaceStyle:{
+  },
   addEventScrnStyle:{
     flex:1,
-    margin:10,
-    justifyContent:"space-between"
+    margin:0,
+    justifyContent:"flex-end"
   },
   scrollViewStyle:{
     flex:1
   },
   showAllEventsScrn:{
     flex:1
+  },
+  btnsWrapperStyle:{
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"center"
   }
 }
 

@@ -10,6 +10,7 @@ import com.facebook.soloader.SoLoader;
 import com.tkporter.sendsms.SendSMSPackage;
 import java.util.Arrays;
 import java.util.List;
+import com.lwansbrough.RCTCamera.RCTCameraPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -23,7 +24,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-		  SendSMSPackage.getInstance()
+          new RCTCameraPackage(),
+          SendSMSPackage.getInstance()
 		);
     }
 

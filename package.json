@@ -10,6 +10,8 @@
     "axios": "^0.17.0",
     "react": "16.0.0-beta.5",
     "react-native": "0.49.3",
+    "react-native-camera": "^0.12.0",
+    "react-native-imagepicker": "^2.0.0",
     "react-native-sms": "^1.5.0"
   },
   "devDependencies": {
