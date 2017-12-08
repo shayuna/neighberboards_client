@@ -41,23 +41,30 @@ class Board extends Component {
         )
       }
       else{
-        var oTextInputStyle,oPhotosInterfaceStyle;
+        var oTextInputStyle,oPhotosInterfaceStyle,oRemoveImgBtnState,bRemoveImgBtnShow;
         if (this.state.iMode==0){
-          oTextInputShowState={width:"auto",height:"auto"};
-          oSelectedImageContainerState={width:"auto",height:"auto"};
-          oPhotosInterfaceShowState={width:0,height:0};
+          oTextInputShowState={width:"auto",height:"auto",opacity:1};
+          oSelectedImageContainerState={width:"auto",height:"auto",opacity:1};
+          oPhotosInterfaceShowState={width:0,height:0,opacity:0};
         }
         else{
-          oTextInputShowState={width:0,height:0};
-          oSelectedImageContainerState={width:0,height:0};
-          oPhotosInterfaceShowState={width:"auto",height:"auto"};
+          oTextInputShowState={width:0,height:0,opacity:0};
+          oSelectedImageContainerState={width:0,height:0,opacity:0};
+          oPhotosInterfaceShowState={width:"auto",height:"auto",opacity:1};
+        }
+        if (this.state.oSelectedImgSrc.uri){
+          bRemoveImgBtnShow=true;
+        }
+        else{
+          bRemoveImgBtnShow=false;
         }
         return(
           <View style={styles.addEventScrnStyle}>
             <TextInput style={[styles.textInputStyle,oTextInputShowState]} multiline={true} onChangeText={txt=>this.state.eventTxt=txt}/>
             <PhotosInterface style={styles.photosInterfaceStyle,oPhotosInterfaceShowState} iMode={this.state.iMode} cancelMe={()=>this.hidePhotosComponents()} selectPhoto={(sImgUri)=>this.selectPhoto(sImgUri)}/>
-            <View style={[oSelectedImageContainerState]}>
+            <View style={[styles.selectedImgWrapper,oSelectedImageContainerState]}>
               <Image source={this.state.oSelectedImgSrc} style={{width:width/3,height:width/3,margin:1}}/>
+              {bRemoveImgBtnShow && <MyAdjustableButton caption="הסרת תמונה" pressMe={()=>this.setState({oSelectedImgSrc:{},iMode:0})}/>}
             </View>
             <View style={styles.btnsWrapperStyle}>
               <MyAdjustableButton caption="גלריה" pressMe={()=>this.setState({iMode:1})}/>
@@ -75,6 +82,7 @@ class Board extends Component {
           return (
             <View key={jRec._id} style={styles.viewStyle}>
               <View>
+                <Image source={{uri:"https://storage.googleapis.com/neighberboards.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle}/>
                 <Text style={styles.textStyle}>{jRec.info}</Text>
               </View>
               <MySmallBtn title="לשלוח הודעה" pressMe={()=>this.sendMsg(jRec.tel)}/>
@@ -100,9 +108,51 @@ class Board extends Component {
       Alert.alert("with sendmsg. tel - "+tel);
     }
     addNewEvent(){
-      Alert.alert (this.state.longitude+" *** "+this.state.latitude+" *** "+this.state.phoneNum+" *** "+this.state.eventTxt);
-      axios.get("https://neighberboards.appspot.com/insertData?longitude="+this.state.longitude+"&latitude="+this.state.latitude+"&tel="+this.state.phoneNum+"&info="+this.state.eventTxt)
-        .then(this.reloadBoard());
+      var swIsContainPic=this.state.oSelectedImgSrc.uri!="" ? 1 : 0;
+      var oThisHolder=this;
+      axios.post("https://neighberboards.appspot.com/insertData",{
+          longitude:this.state.longitude,
+          latitude:this.state.latitude,
+          tel:this.state.phoneNum,
+          info:this.state.eventTxt,
+          isContainPic:swIsContainPic
+      })
+      .then(function(response){
+//        Alert.alert("msg id123="+response.data.toString());
+          if(swIsContainPic){
+            let data = new FormData();
+            let file= oThisHolder.state.oSelectedImgSrc.uri;
+            data.append("fl",file,"fl");
+            const config = {
+                headers: { 'content-type': 'multipart/form-data' }
+            }
+/*
+            axios.post('https://neighberboards.appspot.com/uploadImg?nm='+response.data.toString(), file, config)
+            .then(function(response){
+              Alert.alert("ok");
+              oThisHolder.reloadBoard();
+            })
+            .catch(function(sErr){
+              Alert.alert("err123="+sErr);
+            })
+*/
+            const oData = new FormData();
+            oData.append('fl', {
+              uri: oThisHolder.state.oSelectedImgSrc.uri,
+              type: 'image/jpeg',
+              name: 'fl'
+            });
+            fetch('https://neighberboards.appspot.com/uploadImg?nm='+response.data.toString(), {
+              method: 'post',
+              body: oData
+            }).then(res => {
+              oThisHolder.reloadBoard();
+            });
+          }
+      })
+      .catch(function(error){
+//        Alert.alert("the error is - "+error);
+      });
     }
     reloadBoard(){
       this.state.iState=1;
@@ -148,6 +198,16 @@ const styles = {
     display:"flex",
     flexDirection:"row",
     justifyContent:"center"
+  },
+  selectedImgWrapper:{
+    display:"flex",
+    justifyContent:"space-between",
+    alignItems:"center",
+    flexDirection:"row"
+  },
+  boardMsgImgStyle:{
+    width:"100%",
+    height:150
   }
 }
 
