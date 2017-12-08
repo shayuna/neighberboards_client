@@ -82,7 +82,7 @@ class Board extends Component {
           return (
             <View key={jRec._id} style={styles.viewStyle}>
               <View>
-                <Image source={{uri:"https://storage.googleapis.com/neighberboards.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle}/>
+                <Image source={{uri:"https://storage.googleapis.com/neighberboards.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle} resizeMethod="resize"/>
                 <Text style={styles.textStyle}>{jRec.info}</Text>
               </View>
               <MySmallBtn title="לשלוח הודעה" pressMe={()=>this.sendMsg(jRec.tel)}/>
