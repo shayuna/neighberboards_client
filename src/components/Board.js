@@ -5,6 +5,7 @@ import MySmallBtn from "./MySmallBtn";
 import SendSMS from 'react-native-sms';
 import PhotosInterface from "./PhotosInterface";
 import MyAdjustableButton from "./MyAdjustableButton";
+import ImageResizer from 'react-native-image-resizer';
 
 const { width } = Dimensions.get('window')
 class Board extends Component {
@@ -136,17 +137,26 @@ class Board extends Component {
               Alert.alert("err123="+sErr);
             })
 */
-            const oData = new FormData();
-            oData.append('fl', {
-              uri: oThisHolder.state.oSelectedImgSrc.uri,
-              type: 'image/jpeg',
-              name: 'fl'
-            });
-            fetch('https://neighberboards.appspot.com/uploadImg?nm='+response.data.toString(), {
-              method: 'post',
-              body: oData
-            }).then(res => {
-              oThisHolder.reloadBoard();
+            ImageResizer.createResizedImage(file, 400, 400, "JPEG", 60).then((answer) => {
+              // response.uri is the URI of the new image that can now be displayed, uploaded...
+              // response.path is the path of the new image
+              // response.name is the name of the new image with the extension
+              // response.size is the size of the new image
+              const oData = new FormData();
+              oData.append('fl', {
+                uri: answer.uri,
+                type: 'image/jpeg',
+                name: 'fl'
+              });
+              fetch('https://neighberboards.appspot.com/uploadImg?nm='+response.data.toString(), {
+                method: 'post',
+                body: oData
+              }).then(res => {
+                oThisHolder.reloadBoard();
+              });
+            }).catch((err) => {
+//                Alert.alert ("err="+err);
+                  console.log ("err="+err);
             });
           }
       })

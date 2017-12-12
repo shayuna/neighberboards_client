@@ -11,6 +11,7 @@ import com.tkporter.sendsms.SendSMSPackage;
 import java.util.Arrays;
 import java.util.List;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -25,6 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
           new RCTCameraPackage(),
+          new ImageResizerPackage(),
           SendSMSPackage.getInstance()
 		);
     }
