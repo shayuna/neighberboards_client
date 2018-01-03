@@ -37,6 +37,8 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		A72E3A79061B4593BD204D3B /* libSendSMS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BEAF4A4E14A40E6935DB97F /* libSendSMS.a */; };
+		6B096A26A1AC4DA8A4516FDC /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CCD749B8BD241688F819F4D /* libRCTCamera.a */; };
+		23986891C6D047CEAA2FD899 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62BDF53740F1423AB79C909A /* libRCTImageResizer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -266,6 +268,10 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		E4F046C39BE7488F91F5321D /* SendSMS.xcodeproj */ = {isa = PBXFileReference; name = "SendSMS.xcodeproj"; path = "../node_modules/react-native-sms/SendSMS.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		9BEAF4A4E14A40E6935DB97F /* libSendSMS.a */ = {isa = PBXFileReference; name = "libSendSMS.a"; path = "libSendSMS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		6BB65EE3E9FB4852954C5262 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; name = "RCTCamera.xcodeproj"; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		3CCD749B8BD241688F819F4D /* libRCTCamera.a */ = {isa = PBXFileReference; name = "libRCTCamera.a"; path = "libRCTCamera.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		9E86901232D54F5FB3289DBD /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; name = "RCTImageResizer.xcodeproj"; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		62BDF53740F1423AB79C909A /* libRCTImageResizer.a */ = {isa = PBXFileReference; name = "libRCTImageResizer.a"; path = "libRCTImageResizer.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,6 +301,8 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				A72E3A79061B4593BD204D3B /* libSendSMS.a in Frameworks */,
+				6B096A26A1AC4DA8A4516FDC /* libRCTCamera.a in Frameworks */,
+				23986891C6D047CEAA2FD899 /* libRCTImageResizer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,6 +472,8 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				E4F046C39BE7488F91F5321D /* SendSMS.xcodeproj */,
+				6BB65EE3E9FB4852954C5262 /* RCTCamera.xcodeproj */,
+				9E86901232D54F5FB3289DBD /* RCTImageResizer.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1012,6 +1022,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Debug;
@@ -1033,6 +1050,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Release;
@@ -1052,6 +1076,11 @@
 				);
 				PRODUCT_NAME = neighberboards_client_2;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
+				);
 			};
 			name = Debug;
 		};
@@ -1069,6 +1098,11 @@
 				);
 				PRODUCT_NAME = neighberboards_client_2;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
+				);
 			};
 			name = Release;
 		};
@@ -1098,6 +1132,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Debug;
@@ -1128,6 +1169,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Release;
@@ -1153,6 +1201,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1177,6 +1227,8 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};

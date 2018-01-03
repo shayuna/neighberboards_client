@@ -14,7 +14,8 @@
     "react-native-camera": "^0.12.0",
     "react-native-image-resizer": "^1.0.0",
     "react-native-imagepicker": "^2.0.0",
-    "react-native-sms": "^1.5.0"
+    "react-native-sms": "^1.5.0",
+    "react-timer-mixin": "^0.13.3"
   },
   "devDependencies": {
     "babel-jest": "21.2.0",

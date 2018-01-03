@@ -3,7 +3,7 @@ import {TouchableHighlight,Text} from "react-native";
 
 const MySmallBtn = (props)=>{
   return(
-    <TouchableHighlight onPress={props.pressMe} style={myStyles.btnStyle}>
+    <TouchableHighlight onPress={props.pressMe} style={[myStyles.btnStyle,props.smallBtnStyle]}>
       <Text style={myStyles.txtStyle}>{props.title}</Text>
     </TouchableHighlight>
   )
@@ -12,7 +12,6 @@ const MySmallBtn = (props)=>{
 const myStyles = {
   btnStyle:{
     backgroundColor:"red",
-    width:"50%",
     padding:"2%",
     margin:"2%",
     borderRadius:10,

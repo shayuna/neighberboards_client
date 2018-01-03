@@ -34,7 +34,7 @@ class Board extends Component {
       if (this.state.iState==1){
         return(
           <View style={styles.showAllEventsScrn}>
-            <MySmallBtn title="הוספת הודעה ללוח" pressMe={()=>this.setState({iState:2})}/>
+            <MySmallBtn title="הוספת הודעה ללוח" pressMe={()=>this.setState({iState:2})} smallBtnStyle={{width:"50%"}}/>
             <ScrollView style={styles.scrollViewStyle}>
               {this.processList()}
             </ScrollView>
@@ -86,7 +86,7 @@ class Board extends Component {
                 <Image source={{uri:"https://storage.googleapis.com/neighberboards.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle} resizeMethod="resize"/>
                 <Text style={styles.textStyle}>{jRec.info}</Text>
               </View>
-              <MySmallBtn title="לשלוח הודעה" pressMe={()=>this.sendMsg(jRec.tel)}/>
+              <MySmallBtn title="לשלוח הודעה" pressMe={()=>this.sendMsg(jRec.tel)} smallBtnStyle={{width:"50%"}}/>
             </View>
           )
         })
