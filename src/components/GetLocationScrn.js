@@ -7,12 +7,17 @@ class GetLocationScrn extends Component {
   constructor(myProps){
     super();
     this.state={
-      pressMeFunc:myProps.pressMe
+      pressMeFunc:myProps.pressMe,
+      isDisabled:false
     }
   }
   render(){
+    var disableState={};
+    if (this.state.isDisabled){
+      disableState=styles.disableState;
+    }
     return (
-      <View style={styles.wrapperStyle}>
+      <View style={[styles.wrapperStyle,disableState]}>
         <Hdr>neighberboards</Hdr>
         <View style={styles.mainBdy}>
           <View style={styles.paragraphWrapper}>
@@ -27,16 +32,24 @@ class GetLocationScrn extends Component {
     )
   }
   getLocationData(){
+    this.setState({isDisabled:true});
     try{
       navigator.geolocation.getCurrentPosition(
         (position) =>{
           var oData={latitude:position.coords.latitude,longitude:position.coords.longitude};
-          Alert.alert("latitude="+position.coords.latitude+"longitude="+position.coords.longitude);
+          console.log("latitude="+position.coords.latitude+"longitude="+position.coords.longitude);
           this.state.pressMeFunc(oData);
         },
         (error) =>{
-            Alert.alert("02/01/2018 - there is an error when trying to retrieve location data. err is - "+error.message);
-//            Alert.alert("there is an error when trying to retrieve location data. err is - "+error.message);
+            var sMsg="02/01/2018 - there is an error when trying to retrieve location data. err is - "+error.message;
+            if (error.message.toLowerCase().indexOf("no location provider available")>-1){
+              Alert.alert ("you should turn your location service on for this one-time operation");
+            }
+            else if (error.message.toLowerCase().indexOf("location request timed out")>-1){
+              Alert.alert("there is some problem in retrieving your location data. you can try again in a few minutes.")
+            }
+            this.setState({isDisabled:false});
+            console.log (sMsg);
         },
         {
             enableHighAccuracy:false,
@@ -70,6 +83,10 @@ const styles={
     fontFamily:"Roboto",
     fontSize:20,
     color:"#aaa"
+  },
+  disableState:{
+    backgroundColor:"rgba(0,0,0,0.5)"
   }
+
 }
 export default GetLocationScrn;

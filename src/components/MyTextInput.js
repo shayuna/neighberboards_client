@@ -11,7 +11,7 @@ class MyTextInput extends Component {
     this.state={
         inputTxt:myProps.inputTxt,
         plcHolder:myProps.plcHolder,
-        setPhoneNumFunc:myProps.setPhoneNum
+        setChangedInputFunc:myProps.setChangedInput
     };
   }
   render(){
@@ -22,10 +22,7 @@ class MyTextInput extends Component {
       );
   }
   setData(txt){
-    var re = /^[0-9\-]+$/;
-    if (re.test(txt))this.setState({inputTxt:txt});
-    else this.setState({inputTxt:txt.replace(/[^0-9\-]+/ig,"")});
-    this.state.setPhoneNumFunc(txt);
+    this.state.setChangedInputFunc(txt);
   }
 }
 

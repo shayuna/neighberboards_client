@@ -26,7 +26,7 @@ class App extends Component {
         <Prelude moveOn={()=>this.setState({scrn:100})}/>
       )
     }
-    else if (this.state.scrn==100/*this.state.scrn==1 && !this.state.longitude*/){
+    else if (this.state.scrn==100  && !this.state.longitude){
       return(
         <Intro moveOn={()=>this.setState({scrn:102})}/>
       )
@@ -38,13 +38,14 @@ class App extends Component {
     }
     else if (this.state.scrn==104){
       return (
-        <InsertPhoneScrn pressMe={()=>this.pressOnOKInTelScrn()} setPhoneNum={(vl)=>this.setPhoneNum(vl)}/>
+        <InsertPhoneScrn pressMe={(sPhoneNum)=>this.pressOnOKInTelScrn(sPhoneNum)} />
       )
     }
-    else if (this.state.scrn==1 && this.state.longitude || 1==1){
-      this.state.longitude=34.771808899999996;/* for debugging on emulator */
-      this.state.latitude=32.0754459;/* for debugging on emulator */
-      this.state.phoneNum="0524469981";/* for debugging on emulator */
+    else if (this.state.longitude){
+//      this.state.longitude=34.771808899999996;/* for debugging on emulator */
+  //    this.state.latitude=32.0754459;/* for debugging on emulator */
+    //  this.state.phoneNum="0524469981";/* for debugging on emulator */
+      console.log(this.state.longitude+" *** "+this.state.latitude+" *** "+this.state.phoneNum);
       return(
         <Board myData={{phoneNum:this.state.phoneNum,longitude:this.state.longitude,latitude:this.state.latitude}}/>
       )
@@ -53,9 +54,10 @@ class App extends Component {
       Alert.alert("no screen found");
     }
   }
-  pressOnOKInTelScrn(){
-    AsyncStorage.setItem("phone",this.state.phoneNum);
-    this.setState({scrn:1});
+  pressOnOKInTelScrn(sPhoneNum){
+    AsyncStorage.setItem("phone",sPhoneNum);
+    console.log ("got the phone num. it is - " + sPhoneNum);
+    this.setState({scrn:1,phoneNum:sPhoneNum});
   }
   pressOnOKInGetLocationScrn(oData){
     var sLongitude=oData.longitude.toString(),sLatitude=oData.latitude.toString()
@@ -64,9 +66,6 @@ class App extends Component {
     this.state.longitude=sLongitude;
     this.state.latitude=sLatitude;
     this.setState({scrn:104});
-  }
-  setPhoneNum(vl){
-    this.state.phoneNum=vl;
   }
   async initAppState(){
     var sPhone=await AsyncStorage.getItem("phone");
