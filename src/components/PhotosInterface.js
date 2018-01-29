@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import {View,Text,TouchableHighlight,Alert,CameraRoll,ScrollView,Image,Dimensions } from 'react-native';
+import {View,Text,TouchableHighlight,Alert,CameraRoll,ScrollView,Image,Dimensions} from 'react-native';
 import MyAdjustableButton from "./MyAdjustableButton";
 import Camera from 'react-native-camera';
 
@@ -78,8 +78,8 @@ class PhotosInterface extends Component {
             </ScrollView>
             <View style={styles.btnsWrapper}>
             <MyAdjustableButton caption=">" pressMe={()=>this.forward1()}/>
-            <MyAdjustableButton caption="ביטול" pressMe={()=>this.cancel1()}/>
               <MyAdjustableButton caption="בחירה" pressMe={()=>this.select1()}/>
+              <MyAdjustableButton caption="ביטול" pressMe={()=>this.cancel1()}/>
               <MyAdjustableButton caption="<" pressMe={()=>this.back1()}/>
             </View>
           </View>

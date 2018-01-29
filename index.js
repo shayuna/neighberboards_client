@@ -26,7 +26,7 @@ class App extends Component {
         <Prelude moveOn={()=>this.setState({scrn:100})}/>
       )
     }
-    else if (this.state.scrn==100  && !this.state.longitude){
+    else if (this.state.scrn==100 && !this.state.longitude){
       return(
         <Intro moveOn={()=>this.setState({scrn:102})}/>
       )

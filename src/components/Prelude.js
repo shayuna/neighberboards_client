@@ -14,7 +14,7 @@ class Prelude extends Component {
     this.state.moveOnFunc=myProps.moveOn;
   }
   componentWillMount(){
-    axios.get("https://neighberboards.appspot.com/getquote?dt="+(new Date()).getTime())
+    axios.get("https://neighberboards-192420.appspot.com/getquote?dt="+(new Date()).getTime())
       .then(response=>this.setState({quote:"\""+response.data.quote+"\"",author:response.data.author}));
   }
   componentDidMount(){
@@ -26,7 +26,7 @@ class Prelude extends Component {
     return (
       <View style={styles.wrapperStyle}>
         <Hdr>neighberboards</Hdr>
-        <Image source={{uri:"https://neighberboards.appspot.com/public/images/nutchi.png"}} style={styles.mainImgStyle}/>
+        <Image source={{uri:"https://neighberboards-192420.appspot.com/public/images/nutchi.png"}} style={styles.mainImgStyle}/>
         <View style={styles.quoteWrapperStyle}>
           <Text style={styles.quoteStyle}>{this.state.quote}</Text>
           <Text style={styles.authorStyle}>{this.state.author}</Text>
@@ -54,13 +54,13 @@ const styles = {
     fontFamily:"Roboto",
     fontSize:20,
     color:"#aaa",
-    textAlign:"right"
+    textAlign:"left"
   },
   authorStyle:{
     fontFamily:"Roboto",
     fontSize:14,
     color:"#ccc",
-    textAlign:"left"
+    textAlign:"right"
   }
 }
-export default Prelude
+export default Prelude;

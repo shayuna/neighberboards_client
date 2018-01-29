@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View,Text,TouchableHighlight} from "react-native";
+import {View,Text,TouchableOpacity} from "react-native";
 
 class MyAdjustableButton extends Component{
   state = {
@@ -21,25 +21,26 @@ class MyAdjustableButton extends Component{
 
   render(){
     return (
-        <TouchableHighlight style={styles.btn} onPress={this.state.pressMeFunc}>
+        <TouchableOpacity style={styles.btn} onPress={this.state.pressMeFunc}>
           <Text style={styles.txt}>{this.state.caption}</Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
     )
   }
 
 }
 const styles = {
   btn:{
-    backgroundColor:"red",
-    paddingLeft:10,
-    paddingRight:10,
-    paddingTop:3,
-    paddingBottom:3,
+    paddingLeft:5,
+    paddingRight:5,
+    paddingTop:5,
+    paddingBottom:5,
+    borderRadius:5,
+    borderWidth:1,
+    borderColor:"red",
     margin:3
   },
   txt:{
-    fontSize:18,
-    color:"white"
+    fontSize:18
   }
 }
 

@@ -1,13 +1,24 @@
 import React,{Component} from "react";
-import {ScrollView,Text,View,Alert,TextInput,Image,Dimensions} from "react-native";
+import ReactNative,{ScrollView,Text,View,Alert,TextInput,Image,Dimensions,TouchableOpacity,Keyboard} from "react-native";
 import axios from "axios";
 import MySmallBtn from "./MySmallBtn";
 import SendSMS from 'react-native-sms';
 import PhotosInterface from "./PhotosInterface";
 import MyAdjustableButton from "./MyAdjustableButton";
+import MyInputLikeBtn from "./MyInputLikeBtn";
 import ImageResizer from 'react-native-image-resizer';
+import MyImageAndTextBtn from "./MyImageAndTextBtn";
+import dismissKeyboard from 'react-native-dismiss-keyboard';
+const { width } = Dimensions.get('window');
 
-const { width } = Dimensions.get('window')
+/* a hack that forces all devices to enforce the ltr default direction rule, otherwise the devices that configured as rtl, e.g. devices intended for the israeli market, will reverse the direction of the text and images and layout generally*/
+try {
+    ReactNative.I18nManager.allowRTL(false);
+} catch (e) {
+    console.log(e);
+}
+
+
 class Board extends Component {
   state={
        iState:1,
@@ -27,14 +38,15 @@ class Board extends Component {
       this.state.latitude=props.myData.latitude;
     }
     componentWillMount(){
-      axios.get("https://neighberboards.appspot.com/retrieveData?longitude="+this.state.longitude+"&latitude="+this.state.latitude)
-        .then(response=>this.setState({jList:response.data}));
+      axios.get("https://neighberboards-192420.appspot.com/retrieveData?longitude="+this.state.longitude+"&latitude="+this.state.latitude)
+        .then(response=>this.setState({jList:response.data}))
+        .catch(error=>console.log("error is - "+error.response))
     }
     render(){
       if (this.state.iState==1){
         return(
           <View style={styles.showAllEventsScrn}>
-            <MySmallBtn title="הוספת הודעה ללוח" pressMe={()=>this.setState({iState:2})} smallBtnStyle={{width:"50%"}}/>
+          <MyInputLikeBtn title="i want to add something" wrapperStyle={{paddingTop:20,paddingBottom:20,paddingRight:10,paddingLeft:10}} textStyle={{borderWidth:1,alignSelf:"center",paddingTop:10,paddingBottom:10,paddingLeft:10,paddingRight:10,borderRadius:6,borderColor:"red",fontFamily:"Roboto",fontSize:20,width:"95%"}} pressMe={()=>{this.state.oSelectedImgSrc={};this.setState({iState:2})}}/>
             <ScrollView style={styles.scrollViewStyle}>
               {this.processList()}
             </ScrollView>
@@ -42,16 +54,23 @@ class Board extends Component {
         )
       }
       else{
-        var oTextInputStyle,oPhotosInterfaceStyle,oRemoveImgBtnState,bRemoveImgBtnShow;
+        var oTextInputStyle,oPhotosInterfaceStyle,
+            oRemoveImgBtnState,bRemoveImgBtnShow,oUpperControlPanelShowState,
+            oLowerControlPanelShowState;
         if (this.state.iMode==0){
-          oTextInputShowState={width:"auto",height:"auto",opacity:1};
-          oSelectedImageContainerState={width:"auto",height:"auto",opacity:1};
+          oUpperControlPanelShowState={opacity:1};
+          oLowerControlPanelShowState={opacity:1};
+          oTextInputShowState={opacity:1,flex:1};
+          oSelectedImageContainerState={opacity:1};
           oPhotosInterfaceShowState={width:0,height:0,opacity:0};
         }
         else{
+          dismissKeyboard();
+          oUpperControlPanelShowState={opacity:0};
+          oLowerControlPanelShowState={opacity:0};
           oTextInputShowState={width:0,height:0,opacity:0};
           oSelectedImageContainerState={width:0,height:0,opacity:0};
-          oPhotosInterfaceShowState={width:"auto",height:"auto",opacity:1};
+          oPhotosInterfaceShowState={opacity:1,flex:1};
         }
         if (this.state.oSelectedImgSrc.uri){
           bRemoveImgBtnShow=true;
@@ -61,17 +80,21 @@ class Board extends Component {
         }
         return(
           <View style={styles.addEventScrnStyle}>
-            <TextInput style={[styles.textInputStyle,oTextInputShowState]} multiline={true} onChangeText={txt=>this.state.eventTxt=txt}/>
+            <View style={[styles.upperControlPanelStyle,oUpperControlPanelShowState]}>
+              <MyAdjustableButton caption="שיתוף" pressMe={()=>this.addNewEvent()}/>
+              <TouchableOpacity onPress={()=>this.reloadBoard()}>
+                <Image source={require("../images/back.png")} style={styles.backBtnStyle}/>
+              </TouchableOpacity>
+            </View>
+            <TextInput style={[styles.textInputStyle,oTextInputShowState]} multiline={true} autoFocus={true} placeholder="i want to add something" onChangeText={txt=>this.state.eventTxt=txt}/>
             <PhotosInterface style={styles.photosInterfaceStyle,oPhotosInterfaceShowState} iMode={this.state.iMode} cancelMe={()=>this.hidePhotosComponents()} selectPhoto={(sImgUri)=>this.selectPhoto(sImgUri)}/>
             <View style={[styles.selectedImgWrapper,oSelectedImageContainerState]}>
               <Image source={this.state.oSelectedImgSrc} style={{width:width/3,height:width/3,margin:1}}/>
               {bRemoveImgBtnShow && <MyAdjustableButton caption="הסרת תמונה" pressMe={()=>this.setState({oSelectedImgSrc:{},iMode:0})}/>}
             </View>
-            <View style={styles.btnsWrapperStyle}>
-              <MyAdjustableButton caption="גלריה" pressMe={()=>this.setState({iMode:1})}/>
+            <View style={[styles.btnsWrapperStyle,oLowerControlPanelShowState]}>
               <MyAdjustableButton caption="מצלמה" pressMe={()=>this.setState({iMode:2})}/>
-              <MyAdjustableButton caption="שליחת הודעה" pressMe={()=>this.addNewEvent()}/>
-              <MyAdjustableButton caption="חזרה לפיד" pressMe={()=>this.reloadBoard()}/>
+              <MyAdjustableButton caption="גלריה" pressMe={()=>this.setState({iMode:1})}/>
             </View>
           </View>
         )
@@ -83,10 +106,10 @@ class Board extends Component {
           return (
             <View key={jRec._id} style={styles.viewStyle}>
               <View>
-                <Image source={{uri:"https://storage.googleapis.com/neighberboards.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle} resizeMethod="resize"/>
                 <Text style={styles.textStyle}>{jRec.info}</Text>
+                <Image source={{uri:"https://storage.googleapis.com/neighberboards-192420.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle} resizeMethod="resize"/>
               </View>
-              <MySmallBtn title="לשלוח הודעה" pressMe={()=>this.sendMsg(jRec.tel)} smallBtnStyle={{width:"50%"}}/>
+              <MyImageAndTextBtn pressMe={()=>this.sendMsg(jRec.tel)} btnStyle={{}} title="reply" image={require("../images/sendMsg.png")}/>
             </View>
           )
         })
@@ -106,12 +129,12 @@ class Board extends Component {
       }, (completed, cancelled, error) => {
         console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
       });
-      Alert.alert("with sendmsg. tel - "+tel);
+//      Alert.alert("with sendmsg. tel - "+tel);
     }
     addNewEvent(){
       var swIsContainPic=this.state.oSelectedImgSrc.uri!="" ? 1 : 0;
       var oThisHolder=this;
-      axios.post("https://neighberboards.appspot.com/insertData",{
+      axios.post("https://neighberboards-192420.appspot.com/insertData",{
           longitude:this.state.longitude,
           latitude:this.state.latitude,
           tel:this.state.phoneNum,
@@ -128,7 +151,7 @@ class Board extends Component {
                 headers: { 'content-type': 'multipart/form-data' }
             }
 /*
-            axios.post('https://neighberboards.appspot.com/uploadImg?nm='+response.data.toString(), file, config)
+            axios.post('https://neighberboards-192420.appspot.com/uploadImg?nm='+response.data.toString(), file, config)
             .then(function(response){
               Alert.alert("ok");
               oThisHolder.reloadBoard();
@@ -148,7 +171,7 @@ class Board extends Component {
                 type: 'image/jpeg',
                 name: 'fl'
               });
-              fetch('https://neighberboards.appspot.com/uploadImg?nm='+response.data.toString(), {
+              fetch('https://neighberboards-192420.appspot.com/uploadImg?nm='+response.data.toString(), {
                 method: 'post',
                 body: oData
               }).then(res => {
@@ -181,15 +204,18 @@ const styles = {
   viewStyle:{
     padding:5,
     margin:5,
-    backgroundColor:"#ccc"
+    borderBottomWidth:1,
+    borderBottomColor:"rgba(221,221,221,0.8)"
   },
   textStyle:{
-    fontSize:20
+    fontFamily:"Roboto",
+    fontSize:20,
+    marginBottom:10
   },
   textInputStyle:{
-    borderWidth:1,
-    borderColor:"#ddd",
-    textAlignVertical:"top"
+    textAlignVertical:"top",
+    fontFamily:"Roboto",
+    fontSize:20
   },
   photosInterfaceStyle:{
   },
@@ -207,7 +233,7 @@ const styles = {
   btnsWrapperStyle:{
     display:"flex",
     flexDirection:"row",
-    justifyContent:"center"
+    justifyContent:"flex-start"
   },
   selectedImgWrapper:{
     display:"flex",
@@ -217,7 +243,18 @@ const styles = {
   },
   boardMsgImgStyle:{
     width:"100%",
-    height:150
+    height:400
+  },
+  smsBtnStyle:{
+  },
+  upperControlPanelStyle:{
+    flexDirection:"row",
+    justifyContent:"space-between",
+    alignItems:"center",
+    paddingTop:10,
+    paddingBottom:10,
+    paddingLeft:10,
+    paddingRight:10
   }
 }
 

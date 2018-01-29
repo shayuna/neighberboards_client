@@ -1,11 +1,11 @@
 import React from "react";
-import {TouchableHighlight,Text} from "react-native";
+import {TouchableOpacity,Text} from "react-native";
 
 const MySmallBtn = (props)=>{
   return(
-    <TouchableHighlight onPress={props.pressMe} style={[myStyles.btnStyle,props.smallBtnStyle]}>
+    <TouchableOpacity onPress={props.pressMe} style={[myStyles.btnStyle,props.smallBtnStyle]}>
       <Text style={myStyles.txtStyle}>{props.title}</Text>
-    </TouchableHighlight>
+    </TouchableOpacity>
   )
 }
 

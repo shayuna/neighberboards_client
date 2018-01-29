@@ -1,5 +1,6 @@
 import React,{Component} from "react";
 import { View,Text,Alert} from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import MySmallBtn from "./MySmallBtn";
 import Hdr from "./Hdr";
 
@@ -12,12 +13,9 @@ class GetLocationScrn extends Component {
     }
   }
   render(){
-    var disableState={};
-    if (this.state.isDisabled){
-      disableState=styles.disableState;
-    }
     return (
-      <View style={[styles.wrapperStyle,disableState]}>
+      <View style={[styles.wrapperStyle]}>
+        <Spinner visible={this.state.isDisabled} textContent={""} textStyle={{}} />
         <Hdr>neighberboards</Hdr>
         <View style={styles.mainBdy}>
           <View style={styles.paragraphWrapper}>
@@ -84,9 +82,5 @@ const styles={
     fontSize:20,
     color:"#aaa"
   },
-  disableState:{
-    backgroundColor:"rgba(0,0,0,0.5)"
-  }
-
 }
 export default GetLocationScrn;
