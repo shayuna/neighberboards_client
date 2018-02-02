@@ -44,6 +44,7 @@ class Board extends Component {
     }
     render(){
       if (this.state.iState==1){
+        this.resetPostMsgState();
         return(
           <View style={styles.showAllEventsScrn}>
           <MyInputLikeBtn title="i want to add something" wrapperStyle={{paddingTop:20,paddingBottom:20,paddingRight:10,paddingLeft:10}} textStyle={{borderWidth:1,alignSelf:"center",paddingTop:10,paddingBottom:10,paddingLeft:10,paddingRight:10,borderRadius:6,borderColor:"red",fontFamily:"Roboto",fontSize:20,width:"95%"}} pressMe={()=>{this.state.oSelectedImgSrc={};this.setState({iState:2})}}/>
@@ -54,50 +55,42 @@ class Board extends Component {
         )
       }
       else{
-        var oTextInputStyle,oPhotosInterfaceStyle,
-            oRemoveImgBtnState,bRemoveImgBtnShow,oUpperControlPanelShowState,
-            oLowerControlPanelShowState;
-        if (this.state.iMode==0){
-          oUpperControlPanelShowState={opacity:1};
-          oLowerControlPanelShowState={opacity:1};
-          oTextInputShowState={opacity:1,flex:1};
-          oSelectedImageContainerState={opacity:1};
-          oPhotosInterfaceShowState={width:0,height:0,opacity:0};
-        }
-        else{
-          dismissKeyboard();
-          oUpperControlPanelShowState={opacity:0};
-          oLowerControlPanelShowState={opacity:0};
-          oTextInputShowState={width:0,height:0,opacity:0};
-          oSelectedImageContainerState={width:0,height:0,opacity:0};
-          oPhotosInterfaceShowState={opacity:1,flex:1};
-        }
+        var bRemoveImgBtnShow;
         if (this.state.oSelectedImgSrc.uri){
           bRemoveImgBtnShow=true;
         }
         else{
           bRemoveImgBtnShow=false;
         }
-        return(
-          <View style={styles.addEventScrnStyle}>
-            <View style={[styles.upperControlPanelStyle,oUpperControlPanelShowState]}>
-              <MyAdjustableButton caption="שיתוף" pressMe={()=>this.addNewEvent()}/>
-              <TouchableOpacity onPress={()=>this.reloadBoard()}>
-                <Image source={require("../images/back.png")} style={styles.backBtnStyle}/>
-              </TouchableOpacity>
+        if (this.state.iMode==0){
+          return(
+            <View style={styles.addEventScrnStyle}>
+              <View style={[styles.upperControlPanelStyle]}>
+                <MyAdjustableButton caption="שיתוף" pressMe={()=>this.addNewEvent()}/>
+                <TouchableOpacity onPress={()=>this.reloadBoard()}>
+                  <Image source={require("../images/back.png")} style={styles.backBtnStyle}/>
+                </TouchableOpacity>
+              </View>
+              <TextInput style={[styles.textInputStyle,{flex:1}]} multiline={true} autoFocus={true} placeholder="i want to add something" defaultValue={this.state.eventTxt} onChangeText={txt=>this.state.eventTxt=txt}/>
+              <View style={[styles.selectedImgWrapper]}>
+                <Image source={this.state.oSelectedImgSrc} style={{width:width/3,height:width/3,margin:1}}/>
+                {bRemoveImgBtnShow && <MyAdjustableButton caption="הסרת תמונה" pressMe={()=>this.setState({oSelectedImgSrc:{},iMode:0})}/>}
+              </View>
+              <View style={[styles.btnsWrapperStyle]}>
+                <MyAdjustableButton caption="מצלמה" pressMe={()=>this.setState({iMode:2})}/>
+                <MyAdjustableButton caption="גלריה" pressMe={()=>this.setState({iMode:1})}/>
+              </View>
             </View>
-            <TextInput style={[styles.textInputStyle,oTextInputShowState]} multiline={true} autoFocus={true} placeholder="i want to add something" onChangeText={txt=>this.state.eventTxt=txt}/>
-            <PhotosInterface style={styles.photosInterfaceStyle,oPhotosInterfaceShowState} iMode={this.state.iMode} cancelMe={()=>this.hidePhotosComponents()} selectPhoto={(sImgUri)=>this.selectPhoto(sImgUri)}/>
-            <View style={[styles.selectedImgWrapper,oSelectedImageContainerState]}>
-              <Image source={this.state.oSelectedImgSrc} style={{width:width/3,height:width/3,margin:1}}/>
-              {bRemoveImgBtnShow && <MyAdjustableButton caption="הסרת תמונה" pressMe={()=>this.setState({oSelectedImgSrc:{},iMode:0})}/>}
-            </View>
-            <View style={[styles.btnsWrapperStyle,oLowerControlPanelShowState]}>
-              <MyAdjustableButton caption="מצלמה" pressMe={()=>this.setState({iMode:2})}/>
-              <MyAdjustableButton caption="גלריה" pressMe={()=>this.setState({iMode:1})}/>
-            </View>
-          </View>
-        )
+            )
+          }
+          else{
+            return(
+              <View style={styles.addEventScrnStyle}>
+                <PhotosInterface style={[styles.photosInterfaceStyle,{flex:1}]} iMode={this.state.iMode} cancelMe={()=>this.hidePhotosComponents()} selectPhoto={(sImgUri)=>this.selectPhoto(sImgUri)}/>
+              </View>
+            )
+          }
+
       }
     }
     processList(){
@@ -197,6 +190,9 @@ class Board extends Component {
     selectPhoto(sImgUri){
       console.log ("imgUri - "+sImgUri);
       this.setState({oSelectedImgSrc:{uri:sImgUri},iMode:0});
+    }
+    resetPostMsgState(){
+      this.state.eventTxt="";
     }
 }
 

@@ -9,21 +9,25 @@ class PhotosInterface extends Component {
   }
   constructor(props){
     super();
+    this.setStateStraight();
     this.state.cancelMeFunc=props.cancelMe;
     this.state.selectPhotoFunc=props.selectPhoto;
+    this.state.iMode=props.iMode;
   }
   resetState(){
-    this.setState({
-      photos:[],
-      iNumberOfPhotosInScrn:21,
-      iSelectedIndex:-1,
-      iPhotosNum:0,
-      iIndexInPhotosList:-21,
-      iMode:0
-    });
+    this.setStateStraight();
+    this.render();
+  }
+  setStateStraight(){
+    this.state.iMode=0;
+    this.state.photos=[];
+    this.state.iNumberOfPhotosInScrn=21;
+    this.state.iSelectedIndex=-1;
+    this.state.iPhotosNum=0;
+    this.state.iIndexInPhotosList=-21;
   }
   componentDidMount(){
-    this.resetState();
+    this.getPhotos(1);
   }
 
   componentWillReceiveProps(props){
@@ -77,10 +81,10 @@ class PhotosInterface extends Component {
               }
             </ScrollView>
             <View style={styles.btnsWrapper}>
-            <MyAdjustableButton caption=">" pressMe={()=>this.forward1()}/>
+              <MyAdjustableButton caption="<" pressMe={()=>this.back1()}/>
               <MyAdjustableButton caption="בחירה" pressMe={()=>this.select1()}/>
               <MyAdjustableButton caption="ביטול" pressMe={()=>this.cancel1()}/>
-              <MyAdjustableButton caption="<" pressMe={()=>this.back1()}/>
+              <MyAdjustableButton caption=">" pressMe={()=>this.forward1()}/>
             </View>
           </View>
       )
