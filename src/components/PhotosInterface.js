@@ -47,8 +47,10 @@ class PhotosInterface extends Component {
     this.state.cancelMeFunc();
   }
   select1(){
-    var sImgUri=this.state.photos[this.state.iSelectedIndex].node.image.uri;
-    this.state.selectPhotoFunc(sImgUri);
+    if (this.state.iSelectedIndex>-1){
+      var sImgUri=this.state.photos[this.state.iSelectedIndex].node.image.uri;
+      this.state.selectPhotoFunc(sImgUri);
+    }
   }
   render(){
     if (this.state.iMode==1){

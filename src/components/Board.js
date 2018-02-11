@@ -100,7 +100,7 @@ class Board extends Component {
             <View key={jRec._id} style={styles.viewStyle}>
               <View>
                 <Text style={styles.textStyle}>{jRec.info}</Text>
-                <Image source={{uri:"https://storage.googleapis.com/neighberboards-192420.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle} resizeMethod="resize"/>
+                {Boolean(jRec.isContainPic) && <Image source={{uri:"https://storage.googleapis.com/neighberboards-192420.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle} resizeMethod="resize"/>}
               </View>
               <MyImageAndTextBtn pressMe={()=>this.sendMsg(jRec.tel)} btnStyle={{}} title="reply" image={require("../images/sendMsg.png")}/>
             </View>
@@ -125,7 +125,7 @@ class Board extends Component {
 //      Alert.alert("with sendmsg. tel - "+tel);
     }
     addNewEvent(){
-      var swIsContainPic=this.state.oSelectedImgSrc.uri!="" ? 1 : 0;
+      var swIsContainPic=this.state.oSelectedImgSrc.uri ? 1 : 0;
       var oThisHolder=this;
       axios.post("https://neighberboards-192420.appspot.com/insertData",{
           longitude:this.state.longitude,
@@ -174,6 +174,9 @@ class Board extends Component {
 //                Alert.alert ("err="+err);
                   console.log ("err="+err);
             });
+          }
+          else{
+            oThisHolder.reloadBoard();
           }
       })
       .catch(function(error){
