@@ -13,11 +13,10 @@ class Prelude extends Component {
     super();
     this.state.moveOnFunc=myProps.moveOn;
   }
-  componentWillMount(){
-    axios.get("https://neighberboards-192420.appspot.com/getquote?dt="+(new Date()).getTime())
-      .then(response=>this.setState({quote:"\""+response.data.quote+"\"",author:response.data.author}));
-  }
   componentDidMount(){
+    axios.get("https://sixth-env-197608.appspot.com/getquote?lng=he&dt="+(new Date()).getTime())
+      .then(response=>this.setState({quote:"\""+response.data.quote+"\"",author:response.data.author}));
+
     setTimeout(() => {
       this.state.moveOnFunc();
     },4000);
@@ -26,7 +25,7 @@ class Prelude extends Component {
     return (
       <View style={styles.wrapperStyle}>
         <Hdr>neighberboards</Hdr>
-        <Image source={{uri:"https://neighberboards-192420.appspot.com/public/images/nutchi.png"}} style={styles.mainImgStyle}/>
+        <Image source={{uri:"https://sixth-env-197608.appspot.com/public/images/nutchi.png"}} style={styles.mainImgStyle}/>
         <View style={styles.quoteWrapperStyle}>
           <Text style={styles.quoteStyle}>{this.state.quote}</Text>
           <Text style={styles.authorStyle}>{this.state.author}</Text>

@@ -9,6 +9,7 @@ import MyInputLikeBtn from "./MyInputLikeBtn";
 import ImageResizer from 'react-native-image-resizer';
 import MyImageAndTextBtn from "./MyImageAndTextBtn";
 import dismissKeyboard from 'react-native-dismiss-keyboard';
+import CaptionsFetcher from "./CaptionsFetcher";
 const { width } = Dimensions.get('window');
 
 /* a hack that forces all devices to enforce the ltr default direction rule, otherwise the devices that configured as rtl, e.g. devices intended for the israeli market, will reverse the direction of the text and images and layout generally*/
@@ -29,7 +30,8 @@ class Board extends Component {
        selectedImage:"",
        jList:[],
        iMode:0,
-       oSelectedImgSrc:{}
+       oSelectedImgSrc:{},
+       eAddMsgBtn:"blablabla"
      }
      constructor(props){
       super();
@@ -38,16 +40,19 @@ class Board extends Component {
       this.state.latitude=props.myData.latitude;
     }
     componentWillMount(){
-      axios.get("https://neighberboards-192420.appspot.com/retrieveData?longitude="+this.state.longitude+"&latitude="+this.state.latitude)
+      axios.get("https://sixth-env-197608.appspot.com/retrieveData?longitude="+this.state.longitude+"&latitude="+this.state.latitude)
         .then(response=>this.setState({jList:response.data}))
         .catch(error=>console.log("error is - "+error.response))
+    }
+    componentDidMount(){
+        CaptionsFetcher.getText("eAddMsgBtn",this);
     }
     render(){
       if (this.state.iState==1){
         this.resetPostMsgState();
         return(
           <View style={styles.showAllEventsScrn}>
-          <MyInputLikeBtn title="i want to add something" wrapperStyle={{paddingTop:20,paddingBottom:20,paddingRight:10,paddingLeft:10}} textStyle={{borderWidth:1,alignSelf:"center",paddingTop:10,paddingBottom:10,paddingLeft:10,paddingRight:10,borderRadius:6,borderColor:"red",fontFamily:"Roboto",fontSize:20,width:"95%"}} pressMe={()=>{this.state.oSelectedImgSrc={};this.setState({iState:2})}}/>
+          <MyInputLikeBtn title={this.state.eAddMsgBtn} wrapperStyle={{paddingTop:20,paddingBottom:20,paddingRight:10,paddingLeft:10}} textStyle={{borderWidth:1,alignSelf:"center",paddingTop:10,paddingBottom:10,paddingLeft:10,paddingRight:10,borderRadius:6,borderColor:"red",fontFamily:"Roboto",fontSize:20,width:"95%"}} pressMe={()=>{this.state.oSelectedImgSrc={};this.setState({iState:2})}}/>
             <ScrollView style={styles.scrollViewStyle}>
               {this.processList()}
             </ScrollView>
@@ -100,7 +105,7 @@ class Board extends Component {
             <View key={jRec._id} style={styles.viewStyle}>
               <View>
                 <Text style={styles.textStyle}>{jRec.info}</Text>
-                {Boolean(jRec.isContainPic) && <Image source={{uri:"https://storage.googleapis.com/neighberboards-192420.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle} resizeMethod="resize"/>}
+                {Boolean(jRec.isContainPic) && <Image source={{uri:"https://storage.googleapis.com/sixth-env-197608.appspot.com/"+jRec._id+".jpg"}} style={styles.boardMsgImgStyle} resizeMethod="resize"/>}
               </View>
               <MyImageAndTextBtn pressMe={()=>this.sendMsg(jRec.tel)} btnStyle={{}} title="reply" image={require("../images/sendMsg.png")}/>
             </View>
@@ -127,7 +132,7 @@ class Board extends Component {
     addNewEvent(){
       var swIsContainPic=this.state.oSelectedImgSrc.uri ? 1 : 0;
       var oThisHolder=this;
-      axios.post("https://neighberboards-192420.appspot.com/insertData",{
+      axios.post("https://sixth-env-197608.appspot.com/insertData",{
           longitude:this.state.longitude,
           latitude:this.state.latitude,
           tel:this.state.phoneNum,
@@ -144,7 +149,7 @@ class Board extends Component {
                 headers: { 'content-type': 'multipart/form-data' }
             }
 /*
-            axios.post('https://neighberboards-192420.appspot.com/uploadImg?nm='+response.data.toString(), file, config)
+            axios.post('https://sixth-env-197608.appspot.com/uploadImg?nm='+response.data.toString(), file, config)
             .then(function(response){
               Alert.alert("ok");
               oThisHolder.reloadBoard();
@@ -164,7 +169,7 @@ class Board extends Component {
                 type: 'image/jpeg',
                 name: 'fl'
               });
-              fetch('https://neighberboards-192420.appspot.com/uploadImg?nm='+response.data.toString(), {
+              fetch('https://sixth-env-197608.appspot.com/uploadImg?nm='+response.data.toString(), {
                 method: 'post',
                 body: oData
               }).then(res => {

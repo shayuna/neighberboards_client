@@ -16,6 +16,7 @@ class App extends Component {
   constructor(){
     super();
     this.initAppState();
+    AsyncStorage.clear();
   }
   componentDidMount(){
     this.publishLocalStorageData();
@@ -26,7 +27,7 @@ class App extends Component {
         <Prelude moveOn={()=>this.setState({scrn:100})}/>
       )
     }
-    else if (this.state.scrn==100 && !this.state.longitude){
+    else if (this.state.scrn==100 && !this.state.longitude /*&& 0==1*/){
       return(
         <Intro moveOn={()=>this.setState({scrn:102})}/>
       )
@@ -41,10 +42,10 @@ class App extends Component {
         <InsertPhoneScrn pressMe={(sPhoneNum)=>this.pressOnOKInTelScrn(sPhoneNum)} />
       )
     }
-    else if (this.state.longitude){
-//      this.state.longitude=34.771808899999996;/* for debugging on emulator */
-  //    this.state.latitude=32.0754459;/* for debugging on emulator */
-    //  this.state.phoneNum="0524469981";/* for debugging on emulator */
+    else if (this.state.longitude || 1==1){
+      this.state.longitude=34.771808899999996;/* for debugging on emulator */
+      this.state.latitude=32.0754459;/* for debugging on emulator */
+      this.state.phoneNum="0524469981";/* for debugging on emulator */
       console.log(this.state.longitude+" *** "+this.state.latitude+" *** "+this.state.phoneNum);
       return(
         <Board myData={{phoneNum:this.state.phoneNum,longitude:this.state.longitude,latitude:this.state.latitude}}/>
